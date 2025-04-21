@@ -65,42 +65,59 @@ const FileUpload = ({ onUploadComplete }) => {
   const handleDragEnter = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    console.log("Drag Enter");
     setIsDragActive(true);
   };
 
   const handleDragLeave = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    // Prevent flickering when dragging over child elements
+    if (e.relatedTarget && e.currentTarget.contains(e.relatedTarget)) {
+      return;
+    }
+    console.log("Drag Leave");
     setIsDragActive(false);
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDragActive(true);
+    // console.log("Drag Over"); // Can be very noisy
+    if (!isDragActive) setIsDragActive(true); // Ensure active state is set
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Files dropped");
+    console.log("Drop event fired");
     setIsDragActive(false);
     
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      console.log(`Dropped ${e.dataTransfer.files.length} file(s)`);
       handleFiles(e.dataTransfer.files);
+    } else {
+      console.log("No files found in drop event dataTransfer");
     }
   };
 
   const handleFileInputChange = (e) => {
-    console.log("Files selected via input");
+    console.log("File input changed");
     if (e.target.files && e.target.files.length > 0) {
+      console.log(`Selected ${e.target.files.length} file(s) via input`);
       handleFiles(e.target.files);
+    } else {
+      console.log("No files selected via input");
     }
+    // Reset the input value to allow selecting the same file again
+    e.target.value = null;
   };
 
   const handleFiles = (newFiles) => {
     setError(null);
+    console.log("handleFiles received:", newFiles);
     const fileArray = Array.from(newFiles);
+    console.log(`Converted to array, ${fileArray.length} file(s):`, fileArray.map(f => f.name));
     
     // Validate each file
     const invalidFiles = fileArray.map(file => {
@@ -116,9 +133,17 @@ const FileUpload = ({ onUploadComplete }) => {
       setError(`${invalidFiles.length} file(s) cannot be uploaded: ${invalidFiles.map(f => `${f.file.name} (${f.reason})`).join(', ')}`);
       // Filter out invalid files
       const validFiles = fileArray.filter(file => validateFile(file).valid);
-      setFiles(prevFiles => [...prevFiles, ...validFiles]);
+      setFiles(prevFiles => {
+        const updatedFiles = [...prevFiles, ...validFiles];
+        console.log("Updated files state:", updatedFiles.map(f => f.name));
+        return updatedFiles;
+      });
     } else {
-      setFiles(prevFiles => [...prevFiles, ...fileArray]);
+      setFiles(prevFiles => {
+        const updatedFiles = [...prevFiles, ...fileArray];
+        console.log("Updated files state:", updatedFiles.map(f => f.name));
+        return updatedFiles;
+      });
     }
   };
 
