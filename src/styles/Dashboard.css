@@ -1,0 +1,137 @@
+.dashboard-container {
+  margin-bottom: 30px;
+}
+
+.dashboard-loading {
+  padding: 20px;
+  text-align: center;
+  color: #64748b;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  font-style: italic;
+}
+
+.dashboard-error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  border-left: 4px solid #ef4444;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.dashboard-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.last-updated {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.refresh-button {
+  background-color: #e2e8f0;
+  color: #475569;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.refresh-button:hover {
+  background-color: #cbd5e1;
+}
+
+.refresh-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.status-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.status-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.card-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.health-indicator {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.health-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.health-dot.healthy {
+  background-color: #22c55e;
+}
+
+.health-dot.unhealthy {
+  background-color: #ef4444;
+}
+
+.health-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.health-text.healthy {
+  color: #22c55e;
+}
+
+.health-text.unhealthy {
+  color: #ef4444;
+}
+
+.version-info {
+  margin-top: 16px;
+  font-size: 12px;
+  color: #64748b;
+  text-align: right;
+  font-style: italic;
+} 
