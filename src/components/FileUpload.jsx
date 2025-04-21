@@ -83,6 +83,7 @@ const FileUpload = ({ onUploadComplete }) => {
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    console.log("Files dropped");
     setIsDragActive(false);
     
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
@@ -91,6 +92,7 @@ const FileUpload = ({ onUploadComplete }) => {
   };
 
   const handleFileInputChange = (e) => {
+    console.log("Files selected via input");
     if (e.target.files && e.target.files.length > 0) {
       handleFiles(e.target.files);
     }
@@ -150,11 +152,13 @@ const FileUpload = ({ onUploadComplete }) => {
     
     setIsUploading(true);
     setError(null);
+    console.log(`Attempting to ingest URL: ${url}`);
     
     const interval = simulateProgress();
     
     try {
       const result = await ingestFromUrl(url);
+      console.log("URL Ingest API Result:", result);
       
       clearInterval(interval);
       setUploadProgress(100);
@@ -163,16 +167,16 @@ const FileUpload = ({ onUploadComplete }) => {
         onUploadComplete(result);
       }
       
-      setUrl('');
+      if(result.success) {
+        setUrl('');
+      } else {
+        setError(result.error || 'Failed to ingest URL');
+      }
     } catch (error) {
-      console.error('Error ingesting from URL:', error);
+      console.error('Fallback Error ingesting from URL:', error);
       setError(`Failed to ingest from URL: ${error.message || 'Unknown error'}`);
-      
       if (onUploadComplete) {
-        onUploadComplete({
-          success: false,
-          error: error.message || 'Unknown error'
-        });
+        onUploadComplete({ success: false, error: error.message || 'Unknown error' });
       }
     } finally {
       setIsUploading(false);
@@ -186,6 +190,7 @@ const FileUpload = ({ onUploadComplete }) => {
     setIsUploading(true);
     setUploadProgress(0);
     setError(null);
+    console.log(`Attempting to upload ${files.length} file(s)`);
     
     const interval = simulateProgress();
     
@@ -193,13 +198,14 @@ const FileUpload = ({ onUploadComplete }) => {
       let result;
       
       if (files.length === 1) {
-        // Single file upload
+        console.log(`Uploading single file: ${files[0].name}`);
         result = await ingestFile(files[0]);
       } else {
-        // Multiple files upload
+        console.log(`Uploading multiple files: ${files.map(f => f.name).join(', ')}`);
         result = await ingestMultipleFiles(files);
       }
       
+      console.log("File Upload API Result:", result);
       clearInterval(interval);
       setUploadProgress(100);
       
@@ -207,22 +213,20 @@ const FileUpload = ({ onUploadComplete }) => {
         onUploadComplete(result);
       }
       
-      // Reset files
-      setFiles([]);
+      if(result.success) {
+        setFiles([]);
+      } else {
+        setError(result.error || 'Upload failed');
+      }
+
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error('Fallback Error during file upload:', error);
       setError(`Upload failed: ${error.message || 'Unknown error'}`);
-      
       if (onUploadComplete) {
-        onUploadComplete({
-          success: false,
-          error: error.message || 'Unknown error'
-        });
+        onUploadComplete({ success: false, error: error.message || 'Unknown error' });
       }
     } finally {
       setIsUploading(false);
-      
-      // Clear progress bar after 1 second
       setTimeout(() => setUploadProgress(0), 1000);
     }
   };

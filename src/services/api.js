@@ -61,17 +61,20 @@ export const ingestFile = async (file, metadata = {}) => {
       formData.append('metadata', JSON.stringify(metadata));
     }
     
+    console.log("Sending single file upload request...");
     const response = await api.post('/ingest/file', formData);
+    console.log("Single file upload response:", response.data);
     return {
       success: true,
       file_name: file.name,
       chunks_created: response.data.chunks_created || 0,
-      ...response.data
+      message: response.data.message || 'File uploaded successfully'
     };
   } catch (error) {
     console.error('Ingest file error:', error);
     return {
       success: false,
+      file_name: file.name,
       error: error.message || 'Failed to upload file'
     };
   }
@@ -89,13 +92,15 @@ export const ingestMultipleFiles = async (files, metadata = {}) => {
       formData.append('metadata', JSON.stringify(metadata));
     }
     
+    console.log(`Sending multiple files (${files.length}) upload request...`);
     const response = await api.post('/ingest/files', formData);
+    console.log("Multiple files upload response:", response.data);
     return {
       success: true,
       file_count: files.length,
       files_processed: response.data.files_processed || 0,
       chunks_created: response.data.chunks_created || 0,
-      ...response.data
+      message: response.data.message || 'Files uploaded successfully'
     };
   } catch (error) {
     console.error('Ingest multiple files error:', error);
@@ -108,7 +113,7 @@ export const ingestMultipleFiles = async (files, metadata = {}) => {
 
 export const ingestFromUrl = async (url, metadata = {}) => {
   try {
-    // Direct API call to ingest from URL
+    console.log(`Sending URL ingest request for: ${url}`);
     const response = await api.post('/ingest/url', {
       url,
       metadata: metadata || {}
@@ -117,17 +122,19 @@ export const ingestFromUrl = async (url, metadata = {}) => {
         'Content-Type': 'application/json'
       }
     });
-    
+    console.log("URL ingest response:", response.data);
     return {
       success: true,
       url: url,
+      file_name: response.data.file_name || url.split('/').pop(),
       chunks_created: response.data.chunks_created || 0,
-      ...response.data
+      message: response.data.message || 'URL ingested successfully'
     };
   } catch (error) {
     console.error('Ingest from URL error:', error);
     return {
       success: false,
+      url: url,
       error: error.message || 'Failed to ingest from URL'
     };
   }
@@ -139,7 +146,13 @@ export const getStatus = async () => {
     return response.data;
   } catch (error) {
     console.error('Get status error:', error);
-    throw error;
+    // Return a default status object instead of throwing
+    return {
+      document_count: 'N/A',
+      chunk_count: 'N/A',
+      status: 'Error',
+      error: error.message || 'Failed to fetch status'
+    };
   }
 };
 
