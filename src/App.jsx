@@ -17,8 +17,8 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1 className="app-title">Hermes UI</h1>
-        <p className="app-subtitle">Document Ingestion for Knowledge Bases</p>
+        <h1 className="app-title">Hermes Document</h1>
+        <p className="app-subtitle">Document Ingestion Service for Hermes Knowledge Bases</p>
       </header>
       
       <section className="app-section">
