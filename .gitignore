@@ -1,1 +1,48 @@
-node_modules
+# Node dependencies
+/node_modules
+
+# Build output
+/dist
+/build
+.parcel-cache
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Optional local config files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# Temporary files created by OS or editors
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Optional IDE/Editor directories
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.sublime-workspace
+*.sublime-project
+
+# Miscellaneous
+.eslintcache
